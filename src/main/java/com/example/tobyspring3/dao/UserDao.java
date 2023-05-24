@@ -5,9 +5,14 @@ import com.example.tobyspring3.domain.User;
 import java.sql.*;
 
 public class UserDao {
-    SimpleConnectionMaker connectionMaker = new SimpleConnectionMaker();
+    ConnectionMaker connectionMaker;
+
+    public UserDao() {
+        this.connectionMaker = new DConnectionMaker();
+    }
+
     public void add(User user) throws ClassNotFoundException, SQLException {
-        Connection conn = connectionMaker.makeNewConnection();
+        Connection conn = connectionMaker.makeConnection();
 
         PreparedStatement pstmt = conn.prepareStatement(
                 "insert into users(id, name, password) values (?, ?, ?)"
@@ -23,8 +28,7 @@ public class UserDao {
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException {
-        // DB 접속
-        Connection conn = connectionMaker.makeNewConnection();
+        Connection conn = connectionMaker.makeConnection();
 
         PreparedStatement pstmt = conn.prepareStatement("select id, name, password from users where id = ?");
         pstmt.setString(1, id);
@@ -46,12 +50,12 @@ public class UserDao {
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
         UserDao userDao = new UserDao();
         User user = new User();
-        user.setId("4");
-        user.setName("haha");
-        user.setPassword("5678");
+        user.setId("5");
+        user.setName("hoho");
+        user.setPassword("1234");
         userDao.add(user);
 
-        User selectedUser = userDao.get("4");
+        User selectedUser = userDao.get("5");
         System.out.println(selectedUser.getId());
         System.out.println(selectedUser.getName());
         System.out.println(selectedUser.getPassword());
